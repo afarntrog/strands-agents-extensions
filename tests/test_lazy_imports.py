@@ -20,8 +20,14 @@ def test_plugins_all_lists_expected_names():
     from strands_agents_extensions import plugins
 
     expected = {
-        "BudgetPlugin", "BudgetExceededException", "BudgetLimitType", "OnExceedAction",
-        "RateLimiterPlugin", "RateLimitExceededException", "RateLimitType", "OnLimitAction",
+        "BudgetPlugin",
+        "BudgetExceededException",
+        "BudgetLimitType",
+        "OnExceedAction",
+        "RateLimiterPlugin",
+        "RateLimitExceededException",
+        "RateLimitType",
+        "OnLimitAction",
         "MessageRedactionPlugin",
         "ModelFallbackPlugin",
     }
