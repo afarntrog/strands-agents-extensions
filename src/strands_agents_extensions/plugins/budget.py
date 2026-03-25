@@ -273,9 +273,7 @@ class BudgetPlugin(Plugin):
             return
 
         # Calculate invocation cost from all cycles
-        self._invocation_cost = sum(
-            self._estimate_cycle_cost(agent, cycle.usage) for cycle in latest_invocation.cycles
-        )
+        self._invocation_cost = sum(self._estimate_cycle_cost(agent, cycle.usage) for cycle in latest_invocation.cycles)
 
         # Accumulate session usage from all cycles in this invocation
         for cycle in latest_invocation.cycles:

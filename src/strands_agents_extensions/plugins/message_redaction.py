@@ -1,4 +1,4 @@
-"""Message redaction plugin for scrubbing sensitive data from agent conversations.
+r"""Message redaction plugin for scrubbing sensitive data from agent conversations.
 
 This module provides a plugin that scans and redacts sensitive data (PII, credentials,
 etc.) from messages before they reach the model provider. It uses configurable regex
@@ -12,8 +12,8 @@ Example Usage:
 
     plugin = MessageRedactionPlugin(
         patterns={
-            "ssn": r"\\b\\d{3}-\\d{2}-\\d{4}\\b",
-            "email": r"\\b[\\w.-]+@[\\w.-]+\\.\\w+\\b",
+            "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+            "email": r"\b[\w.-]+@[\w.-]+\.\w+\b",
         },
         replacement="[REDACTED:{name}]",
     )
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 class MessageRedactionPlugin(Plugin):
-    """Plugin that redacts sensitive data from messages using regex patterns.
+    r"""Plugin that redacts sensitive data from messages using regex patterns.
 
     Scans user messages, tool inputs, and tool results for sensitive data
     and replaces matches with a configurable redaction marker.
@@ -51,9 +51,9 @@ class MessageRedactionPlugin(Plugin):
 
         plugin = MessageRedactionPlugin(
             patterns={
-                "ssn": r"\\b\\d{3}-\\d{2}-\\d{4}\\b",
-                "email": r"\\b[\\w.-]+@[\\w.-]+\\.\\w+\\b",
-                "aws_key": r"\\bAKIA[0-9A-Z]{16}\\b",
+                "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+                "email": r"\b[\w.-]+@[\w.-]+\.\w+\b",
+                "aws_key": r"\bAKIA[0-9A-Z]{16}\b",
             },
             scan_tool_inputs=True,
             scan_tool_results=True,

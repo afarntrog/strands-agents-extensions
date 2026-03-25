@@ -26,7 +26,6 @@ import time
 from typing import TYPE_CHECKING, Any
 
 from strands.hooks.events import AfterInvocationEvent, AfterModelCallEvent
-from strands.models.model import Model
 from strands.plugins import Plugin
 
 if TYPE_CHECKING:
@@ -91,7 +90,9 @@ class ModelFallbackPlugin(Plugin):
 
         self._fallback_models = fallback_models
         self._retry_on: list[type[Exception]] = retry_on if retry_on is not None else [Exception]
-        self._max_fallback_attempts = max_fallback_attempts if max_fallback_attempts is not None else len(fallback_models)
+        self._max_fallback_attempts = (
+            max_fallback_attempts if max_fallback_attempts is not None else len(fallback_models)
+        )
         self._cooldown_seconds = cooldown_seconds
 
         # Per-invocation state
@@ -168,7 +169,6 @@ class ModelFallbackPlugin(Plugin):
             The next fallback model, or None if all are exhausted or cooled down.
         """
         now = time.monotonic()
-        start_index = self._fallback_index
 
         while self._fallback_index < len(self._fallback_models):
             idx = self._fallback_index

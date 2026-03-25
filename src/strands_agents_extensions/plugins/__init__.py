@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from .budget import BudgetExceededException, BudgetLimitType, BudgetPlugin, OnExceedAction
     from .message_redaction import MessageRedactionPlugin
     from .model_fallback import ModelFallbackPlugin
-    from .rate_limiter import OnLimitAction, RateLimitExceededException, RateLimiterPlugin, RateLimitType
+    from .rate_limiter import OnLimitAction, RateLimiterPlugin, RateLimitExceededException, RateLimitType
 
 __all__ = [
     "BudgetExceededException",
@@ -33,8 +33,7 @@ def __getattr__(name):
             return getattr(budget, name)
         except ImportError:
             raise ImportError(
-                f"{name} requires the 'budget' extra: "
-                "pip install strands-agents-extensions[budget]"
+                f"{name} requires the 'budget' extra: pip install strands-agents-extensions[budget]"
             ) from None
     if name in _RATE_LIMITER_NAMES:
         from . import rate_limiter

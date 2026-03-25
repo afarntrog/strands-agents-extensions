@@ -50,7 +50,7 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-            
+
             CREATE TABLE IF NOT EXISTS agents (
                 session_id TEXT NOT NULL,
                 agent_id TEXT NOT NULL,
@@ -60,7 +60,7 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
                 PRIMARY KEY (session_id, agent_id),
                 FOREIGN KEY (session_id) REFERENCES sessions(session_id) ON DELETE CASCADE
             );
-            
+
             CREATE TABLE IF NOT EXISTS messages (
                 session_id TEXT NOT NULL,
                 agent_id TEXT NOT NULL,
@@ -71,7 +71,7 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
                 PRIMARY KEY (session_id, agent_id, message_id),
                 FOREIGN KEY (session_id, agent_id) REFERENCES agents(session_id, agent_id) ON DELETE CASCADE
             );
-            
+
             CREATE TABLE IF NOT EXISTS multi_agents (
                 session_id TEXT NOT NULL,
                 multi_agent_id TEXT NOT NULL,
@@ -81,7 +81,7 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
                 PRIMARY KEY (session_id, multi_agent_id),
                 FOREIGN KEY (session_id) REFERENCES sessions(session_id) ON DELETE CASCADE
             );
-            
+
             CREATE INDEX IF NOT EXISTS idx_messages_session_agent ON messages(session_id, agent_id, message_id);
             CREATE INDEX IF NOT EXISTS idx_agents_session ON agents(session_id);
             CREATE INDEX IF NOT EXISTS idx_multi_agents_session ON multi_agents(session_id);
@@ -216,7 +216,8 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
         try:
             data = json.dumps(message.to_dict())
             self._conn.execute(
-                "UPDATE messages SET data = ?, updated_at = CURRENT_TIMESTAMP WHERE session_id = ? AND agent_id = ? AND message_id = ?",
+                """UPDATE messages SET data = ?, updated_at = CURRENT_TIMESTAMP
+                   WHERE session_id = ? AND agent_id = ? AND message_id = ?""",
                 (data, session_id, agent_id, message.message_id),
             )
             self._conn.commit()
@@ -228,8 +229,8 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
     ) -> list[SessionMessage]:
         """List messages for an agent with pagination."""
         query = """
-            SELECT data FROM messages 
-            WHERE session_id = ? AND agent_id = ? 
+            SELECT data FROM messages
+            WHERE session_id = ? AND agent_id = ?
             ORDER BY message_id
         """
         params = [session_id, agent_id]
@@ -289,7 +290,8 @@ class SQLiteSessionManager(RepositorySessionManager, SessionRepository):
         try:
             data = json.dumps(state)
             self._conn.execute(
-                "UPDATE multi_agents SET data = ?, updated_at = CURRENT_TIMESTAMP WHERE session_id = ? AND multi_agent_id = ?",
+                """UPDATE multi_agents SET data = ?, updated_at = CURRENT_TIMESTAMP
+                   WHERE session_id = ? AND multi_agent_id = ?""",
                 (data, session_id, multi_agent_id),
             )
             self._conn.commit()
