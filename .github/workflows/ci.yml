@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: uv pip install -e ".[all]" pytest pytest-asyncio pytest-timeout --system
+      - name: Run tests
+        run: pytest tests/ --ignore=tests/integration -v
+
+  test-base-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install base package only
+        run: uv pip install -e "." pytest --system
+      - name: Run lazy import tests
+        run: pytest tests/test_lazy_imports.py -v
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install ruff
+        run: uv pip install ruff --system
+      - name: Run ruff check
+        run: ruff check src/ tests/
+      - name: Run ruff format check
+        run: ruff format --check src/ tests/
