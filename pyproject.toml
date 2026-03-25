@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "strands-agents-extensions"
+version = "0.1.0"
+description = "Community extensions for the Strands Agents SDK"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "afarntrog" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["strands-agents>=1.32.0"]
+
+[project.optional-dependencies]
+sqlite = []
+dynamodb = ["boto3>=1.28"]
+budget = ["litellm<=1.82.6"]
+rate-limiter = []
+redaction = []
+fallback = []
+session-managers = ["strands-agents-extensions[sqlite,dynamodb]"]
+plugins = ["strands-agents-extensions[budget,rate-limiter,redaction,fallback]"]
+all = ["strands-agents-extensions[session-managers,plugins]"]
+
+[project.urls]
+Homepage = "https://github.com/afarntrog/strands-agents-extensions"
+Repository = "https://github.com/afarntrog/strands-agents-extensions"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/strands_agents_extensions"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-timeout>=2.3",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests/}"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "D"]
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["strands_agents_extensions"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
