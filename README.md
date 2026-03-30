@@ -16,9 +16,6 @@ Install with specific extras:
 # SQLite session manager
 pip install strands-agents-extensions[sqlite]
 
-# DynamoDB session manager
-pip install strands-agents-extensions[dynamodb]
-
 # All plugins
 pip install strands-agents-extensions[plugins]
 
@@ -37,7 +34,10 @@ pip install strands-agents-extensions[all]
 from strands_agents_extensions.session_managers import SQLiteSessionManager
 
 # Create a SQLite-backed session manager
-session_manager = SQLiteSessionManager(db_path="sessions.db")
+session_manager = SQLiteSessionManager(
+    session_id="chat-session-001",
+    db_path="sessions.db",
+)
 
 # Use with Strands Agent
 agent = Agent(
@@ -52,10 +52,10 @@ agent = Agent(
 from strands_agents_extensions.plugins import BudgetPlugin, RateLimiterPlugin
 
 # Add budget control to your agent
-budget_plugin = BudgetPlugin(max_budget_usd=10.0)
+budget_plugin = BudgetPlugin(max_cost_per_session=10.0)
 
 # Add rate limiting
-rate_limiter = RateLimiterPlugin(max_requests_per_minute=60)
+rate_limiter = RateLimiterPlugin(model_calls_per_minute=60)
 
 agent = Agent(
     plugins=[budget_plugin, rate_limiter],
@@ -68,12 +68,11 @@ agent = Agent(
 | Extra | Description | Dependencies |
 |-------|-------------|--------------|
 | `sqlite` | SQLite session manager | None (stdlib) |
-| `dynamodb` | DynamoDB session manager | boto3>=1.28 |
 | `budget` | Budget control plugin | litellm<=1.82.6 |
 | `rate-limiter` | Rate limiting plugin | None |
 | `redaction` | PII redaction plugin | None |
 | `fallback` | Model fallback plugin | None |
-| `session-managers` | All session managers | sqlite + dynamodb |
+| `session-managers` | All session managers | sqlite |
 | `plugins` | All plugins | budget + rate-limiter + redaction + fallback |
 | `all` | Everything | session-managers + plugins |
 
@@ -82,14 +81,42 @@ agent = Agent(
 ### Session Managers
 
 - **SQLiteSessionManager**: Local SQLite-backed session storage with full conversation history
-- **DynamoDBSessionManager**: AWS DynamoDB-backed session storage for distributed systems
 
 ### Plugins
 
 - **BudgetPlugin**: Track and enforce token budget limits
 - **RateLimiterPlugin**: Control request rate to avoid API throttling
-- **RedactionPlugin**: Automatically redact PII from messages
-- **FallbackPlugin**: Implement model fallback strategies on failures
+- **MessageRedactionPlugin**: Automatically redact PII from messages
+- **ModelFallbackPlugin**: Implement model fallback strategies on failures
+
+## Development
+
+### Running Tests
+
+This project uses [Hatch](https://hatch.pypa.io/) for environment management and pytest for testing.
+
+```bash
+# Install Hatch if you don't have it
+pip install hatch
+
+# Run all tests
+hatch run test
+
+# Run with verbose output
+hatch run test -v
+
+# Run a specific test file
+hatch run test tests/plugins/test_budget.py
+
+# Run tests matching a pattern
+hatch run test -k test_budget
+```
+
+If you already have a virtual environment with dev dependencies installed, you can run pytest directly:
+
+```bash
+pytest tests/
+```
 
 ## License
 
