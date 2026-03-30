@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "strands-agents-extensions"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Community extensions for the Strands Agents SDK"
 readme = "README.md"
 license = "Apache-2.0"
@@ -39,6 +39,9 @@ all = ["strands-agents-extensions[session-managers,plugins]"]
 [project.urls]
 Homepage = "https://github.com/afarntrog/strands-agents-extensions"
 Repository = "https://github.com/afarntrog/strands-agents-extensions"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/strands_agents_extensions"]
