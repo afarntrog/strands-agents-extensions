@@ -70,5 +70,8 @@ convention = "google"
 [tool.ruff.lint.isort]
 known-first-party = ["strands_agents_extensions"]
 
+[tool.uv]
+exclude-newer = "7 days"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
