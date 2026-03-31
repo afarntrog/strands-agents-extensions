@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from .message_redaction import MessageRedactionPlugin
     from .model_fallback import ModelFallbackPlugin
     from .rate_limiter import OnLimitAction, RateLimiterPlugin, RateLimitExceededException, RateLimitType
+    from .retry import RetryPlugin
 
 __all__ = [
     "BudgetExceededException",
@@ -19,6 +20,7 @@ __all__ = [
     "RateLimitExceededException",
     "RateLimiterPlugin",
     "RateLimitType",
+    "RetryPlugin",
 ]
 
 _BUDGET_NAMES = {"BudgetPlugin", "BudgetExceededException", "BudgetLimitType", "OnExceedAction"}
@@ -47,4 +49,8 @@ def __getattr__(name):
         from .model_fallback import ModelFallbackPlugin
 
         return ModelFallbackPlugin
+    if name == "RetryPlugin":
+        from .retry import RetryPlugin
+
+        return RetryPlugin
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
