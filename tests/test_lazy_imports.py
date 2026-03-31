@@ -30,6 +30,7 @@ def test_plugins_all_lists_expected_names():
         "OnLimitAction",
         "MessageRedactionPlugin",
         "ModelFallbackPlugin",
+        "RetryPlugin",
     }
     assert set(plugins.__all__) == expected
 
